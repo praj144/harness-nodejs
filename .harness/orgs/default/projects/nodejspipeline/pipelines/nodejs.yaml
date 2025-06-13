@@ -22,8 +22,10 @@ pipeline:
           infrastructure:
             type: KubernetesDirect
             spec:
-              connectorRef: harness_k8s_connector
+              connectorRef: gkeconnector
               namespace: harness-delegate-ng
+              nodeSelector: {}
+              os: Linux
           execution:
             steps:
               - step:
@@ -31,7 +33,7 @@ pipeline:
                   identifier: BuildDockerImage
                   type: BuildAndPushDockerRegistry
                   spec:
-                    registryRef: GCP_Connector
+                    connectorRef: GCP_Connector
                     repo: gcr.io/just-skyline-458709-a8/harness-nodejs
                     tags:
                       - latest
@@ -45,7 +47,7 @@ pipeline:
                   identifier: RunUnitTests
                   type: Run
                   spec:
-                    connectorRef: harness_k8s_connector
+                    connectorRef: gkeconnector
                     image: node:18
                     shell: Sh
                     command: |
