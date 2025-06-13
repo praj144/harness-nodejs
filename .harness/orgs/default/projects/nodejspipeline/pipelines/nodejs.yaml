@@ -3,12 +3,22 @@ pipeline:
   identifier: nodejsjspipelines
   projectIdentifier: nodejspipeline
   orgIdentifier: default
+  properties:
+    ci:
+      codebase:
+        connectorRef: github_connector
+        repoName: harness-nodejs
+        build:
+          type: branch
+          spec:
+            branch: main
   stages:
     - stage:
         name: BuildAndPush
         identifier: BuildAndPush
         type: CI
         spec:
+          cloneCodebase: true
           infrastructure:
             type: KubernetesDirect
             spec:
