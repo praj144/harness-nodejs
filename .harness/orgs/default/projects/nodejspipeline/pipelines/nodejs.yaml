@@ -6,7 +6,7 @@ pipeline:
   properties:
     ci:
       codebase:
-        connectorRef: github_connector
+        connectorRef: git_new
         repoName: harness-nodejs
         build:
           type: branch
@@ -31,7 +31,7 @@ pipeline:
                   identifier: BuildDockerImage
                   type: BuildAndPushDockerRegistry
                   spec:
-                    registryRef: gcp_artifact_connector
+                    registryRef: GCP_Connector
                     repo: gcr.io/just-skyline-458709-a8/harness-nodejs
                     tags:
                       - latest
