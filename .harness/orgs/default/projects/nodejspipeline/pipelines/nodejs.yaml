@@ -24,40 +24,48 @@ pipeline:
             spec:
               connectorRef: gkeconnector
               namespace: harness-delegate-ng
-              nodeSelector: {}
-              os: Linux
+              automountServiceAccountToken: true
           execution:
             steps:
               - step:
-                  name: Build Docker Image
-                  identifier: BuildDockerImage
                   type: BuildAndPushDockerRegistry
+                  name: Build_Docker_Image
+                  identifier: Build_Docker_Image
                   spec:
                     connectorRef: GCP_Connector
                     repo: gcr.io/just-skyline-458709-a8/harness-nodejs
                     tags:
                       - latest
-                    build:
-                      type: Dockerfile
-                      spec:
-                        context: .
-                        dockerfile: Dockerfile
+                  resources:
+                    limits:
+                      memory: 300Mi
+                      cpu: 200m
+                    requests:
+                      memory: 150Mi
+                      cpu: 100m
               - step:
-                  name: Run Unit Tests
-                  identifier: RunUnitTests
                   type: Run
+                  name: Run_Unit_Tests
+                  identifier: Run_Unit_Tests
                   spec:
-                    connectorRef: gkeconnector
                     image: node:18
+                    connectorRef: gkeconnector
                     shell: Sh
                     command: |
-                      echo "Installing dependencies"
+                      echo "Installing dependencies..."
                       npm install
-                      echo "Running unit tests"
+                      echo "Running unit tests..."
                       npm test
+                  resources:
+                    limits:
+                      memory: 300Mi
+                      cpu: 200m
+                    requests:
+                      memory: 150Mi
+                      cpu: 100m
         failureStrategies:
           - onFailure:
               errors:
                 - AllErrors
               action:
-                type: StageRollback
+                type: Abort
