@@ -1,0 +1,51 @@
+pipeline:
+  name: nodejsjspipelines
+  identifier: nodejsjspipelines
+  projectIdentifier: nodejspipeline
+  orgIdentifier: default
+  stages:
+    - stage:
+        name: BuildAndPush
+        identifier: BuildAndPush
+        type: CI
+        spec:
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: harness_k8s_connector
+              namespace: harness-delegate-ng
+          execution:
+            steps:
+              - step:
+                  name: Build Docker Image
+                  identifier: BuildDockerImage
+                  type: BuildAndPushDockerRegistry
+                  spec:
+                    registryRef: gcp_artifact_connector
+                    repo: gcr.io/just-skyline-458709-a8/harness-nodejs
+                    tags:
+                      - latest
+                    build:
+                      type: Dockerfile
+                      spec:
+                        context: .
+                        dockerfile: Dockerfile
+              - step:
+                  name: Run Unit Tests
+                  identifier: RunUnitTests
+                  type: Run
+                  spec:
+                    connectorRef: harness_k8s_connector
+                    image: node:18
+                    shell: Sh
+                    command: |
+                      echo "Installing dependencies"
+                      npm install
+                      echo "Running unit tests"
+                      npm test
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
