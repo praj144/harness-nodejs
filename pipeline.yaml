@@ -1,0 +1,30 @@
+pipeline:
+  name: nodejsjspipelines
+  projectIdentifier: nodejs-pipeline
+  orgIdentifier: default
+  stages:
+    - stage:
+        name: BuildAndPush
+        type: CI
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Build Docker Image
+                  type: BuildAndPushDockerRegistry
+                  spec:
+                    connectorRef: gcp_artifact_connector
+                    repo: gcr.io/just-skyline-458709-a8/harness-nodejs
+                    tags:
+                      - latest
+              - step:
+                  name: Run Unit Tests
+                  type: Run
+                  spec:
+                    command: echo "Run tests here"
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: harness_k8s_connector
+              namespace: harness-delegate-ng
+
