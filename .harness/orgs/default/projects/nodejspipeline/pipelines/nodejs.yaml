@@ -32,8 +32,8 @@ pipeline:
                   name: Build_Docker_Image
                   identifier: Build_Docker_Image
                   spec:
-                    connectorRef: GCP_Connector
-                    repo: gcr.io/just-skyline-458709-a8/harness-nodejs
+                    connectorRef: Dockerconnector
+                    repo: prajwaltelkar14/harness-nodejs
                     tags:
                       - latest
                   resources:
