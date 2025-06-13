@@ -38,11 +38,11 @@ pipeline:
                       - latest
                   resources:
                     limits:
-                      memory: 300Mi
-                      cpu: 200m
-                    requests:
-                      memory: 150Mi
+                      memory: 200Mi
                       cpu: 100m
+                    requests:
+                      memory: 100Mi
+                      cpu: 50m
               - step:
                   type: Run
                   name: Run_Unit_Tests
@@ -58,11 +58,11 @@ pipeline:
                       npm test
                   resources:
                     limits:
-                      memory: 300Mi
-                      cpu: 200m
-                    requests:
-                      memory: 150Mi
+                      memory: 200Mi
                       cpu: 100m
+                    requests:
+                      memory: 100Mi
+                      cpu: 50m
         failureStrategies:
           - onFailure:
               errors:
